@@ -69,28 +69,31 @@ class RenderCard{
 
         //border
         this.borderColor = ctx.createLinearGradient(0,0,this.width,this.height);
-        this.borderColor.addColorStop(0,'rgb(0,0,255)'); 
-        this.borderColor.addColorStop(1,'rgb(0,0,155)'); 
+        this.borderColor.addColorStop(0,'rgb(46,0,171)'); 
+        this.borderColor.addColorStop(0.5,'rgb(57,13,107)'); 
+        this.borderColor.addColorStop(1,'rgb(79,0,29)'); 
         this.borderWidth = 15
 
         //origin
         this.originHeight = 20;
-        this.originWidth = 250
+        this.originWidth = 222
         this.originX = (this.width/2)-(this.originWidth/2)
         this.originY = this.height-this.originHeight
         this.originTextY = this.originY+12;
         this.originTextColor = "violet"
         this.originFont = 'bold 15px Courier New';
 
-        //variables
-        let counterSize = 40
+        //counter size
+        let cs = 40
+        //padding pixels
+        let pp = 42
 
         this.counters = {
-            "Cost":new RenderCounter(4,4,40,40,"darkgreen","darkblue",data.stats.Cost),
-            "HP":new RenderCounter(4,this.height-44,60,40,"darkred","darkblue",data.stats.HP),
-            "AttackPower":new RenderCounter(this.width-44,4,40,40,"rgb(150,75,0)","darkorange",data.stats.AttackPower),
-            "EquipmentPower":new RenderCounter(this.width-44,50,40,40,"rgb(50,50,50)","rgb(100,100,100)",data.stats.EquipmentPower),
-            "Speed":new RenderCounter(this.width-44,94,40,40,"rgb(50,100,50)","rgb(100,200,100)",data.stats.Speed),
+            "Cost":new RenderCounter(4,4,cs,cs,{r:45,g:156,b:194},this.borderColor,data.stats.Cost),
+            "HP":new RenderCounter(this.width-86,this.height-pp,84,cs,{r:148,g:47,b:40},this.borderColor,data.stats.HP),
+            "AttackPower":new RenderCounter(3,this.height-pp,pp,cs,{r:194,g:127,b:45},this.borderColor,data.stats.AttackPower),
+            "EquipmentPower":new RenderCounter(45,this.height-pp,pp,cs,{r:127,g:129,b:130},this.borderColor,data.stats.EquipmentPower),
+            "Speed":new RenderCounter(this.width-44,4,cs,cs,{r:79,g:194,b:40},this.borderColor,data.stats.Speed),
         }
     }
     draw(ctx){
@@ -106,7 +109,7 @@ class RenderCard{
         let avatar_bottom_y = drawImageXCentered(ctx,this.img_avatar,this.width/2,this.titleHeight,this.width,this.height-this.titleHeight)
 
         //card title text
-        drawText(ctx,"center",this.titleTextColor,this.titleFont,this.name,this.width/2,(this.titleHeight/4)*3,innerCardWidth-80)
+        drawText(ctx,"center",this.titleTextColor,this.titleFont,this.name,this.width/2,(this.titleHeight/4)*3,innerCardWidth-80,undefined,2,'red')
 
         //card footer
         this.footer_top_y = Math.min(avatar_bottom_y,this.height-this.footerHeight)
@@ -116,15 +119,8 @@ class RenderCard{
         drawText(ctx,"left",this.classificationsTextColor,this.flavourTextFont,this.classifications,this.classifications_xOffset,this.footer_top_y+this.classifications_yOffset,innerCardWidth,this.originY-this.flavorTextPaddingBottom)
 
         //flavor text
-        let wordWrappedText = wordWrap(this.flavourText,70)
+        let wordWrappedText = wordWrap(this.flavourText,40)
         drawText(ctx,"center",this.flavourTextColor,this.flavourTextFont,wordWrappedText,this.width/2,this.footer_top_y+this.flavourText_yOffset,innerCardWidth,this.originY-this.flavorTextPaddingBottom)
-
-        //card border
-        drawRoundedRectangle(ctx,0,0,this.width,this.height,this.cornerRadius,undefined,this.borderColor,this.borderWidth)
-
-        //origin text
-        drawRoundedRectangle(ctx,this.originX,this.originY,this.originWidth,this.originHeight,this.cornerRadius,this.borderColor)
-        drawText(ctx,"center",this.originTextColor,this.originFont,this.origin,this.width/2,this.originTextY,this.originWidth-20)
 
         //draw counters
         for(let counterName in this.counters){
@@ -132,12 +128,19 @@ class RenderCard{
             counter.draw(ctx)
         }
 
+        //card border
+        drawRoundedRectangle(ctx,0,0,this.width,this.height,this.cornerRadius,undefined,this.borderColor,this.borderWidth)
+
+        //origin text
+        drawRectangle(ctx,this.originX,this.originY,this.originWidth,this.originHeight,this.borderColor)
+        drawText(ctx,"center",this.originTextColor,this.originFont,this.origin,this.width/2,this.originTextY,this.originWidth-6)
+
         ctx.globalCompositeOperation = "source-over"
     }
 }
 
 class RenderCounter{
-    constructor(x,y,width,height,fillColor,strokeColor,value){
+    constructor(x,y,width,height,obj_rgb,strokeColor,value){
         this.initialValue = value
         this.currentValue = value
         this.maxValue = value
@@ -146,15 +149,18 @@ class RenderCounter{
         this.y = y;
         this.w = width;
         this.h = height;
-        this.fillColor = fillColor;
+        this.obj_rgb = obj_rgb
         this.strokeColor = strokeColor;
-        this.textYOffset = 9
+        this.textYOffset = 8
 
         this.borderRadius = 7;
-        this.lineWidth = 5
-        this.font = 'bold 30px Courier New';
+        this.lineWidth = 7
+        this.font = 'bold 25px Courier New';
     }
     draw(ctx){
+        if(!this.fillColor){
+            this.fillColor = this.generateGradient(this.obj_rgb);
+        }
         //Determine font color
         let textColor = "white"
         if(this.currentValue < this.initialValue){
@@ -164,6 +170,16 @@ class RenderCounter{
         }
         drawRoundedRectangle(ctx,this.x,this.y,this.w,this.h,this.borderRadius,this.fillColor,this.strokeColor,this.lineWidth)
 
-        drawText(ctx,"center",textColor,this.font,`${this.currentValue}`,this.x+(this.w/2),this.y+(this.h/2)+this.textYOffset,this.w)
+        drawText(ctx,"center",textColor,this.font,`${this.currentValue}`,this.x+(this.w/2),this.y+(this.h/2)+this.textYOffset,this.w,undefined,6)
+    }
+    generateGradient(rgb){
+        let r = rgb.r;
+        let g = rgb.g;
+        let b = rgb.b;
+        let gradient = ctx.createLinearGradient(this.x,this.y,this.x+this.w,this.y+this.h);
+        gradient.addColorStop(0,`rgb(${r-50},${g-50},${b-50})`);
+        gradient.addColorStop(0.7,`rgb(${r+50},${g+50},${b+50})`);
+        gradient.addColorStop(1,`rgb(${r-100},${g-100},${b-100})`);
+        return gradient
     }
 }

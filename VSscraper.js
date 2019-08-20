@@ -6,6 +6,10 @@ const util = require('util')
 function scrape(url){
     return new Promise((resolve,reject)=>{
         scrapeIt(url, {
+            simpleTitle:{
+                selector:".page-header__title",
+                convert: helper_simplifyString
+            },
             title: ".page-header__title",
             images:{
                 listItem: ".mw-content-text img",
@@ -274,17 +278,12 @@ function helper_classifyItems(techniques,categories){
 let offensiveWords = `attack,strike,hit,punch,kick,knock,charge,ram,shoot,destroy,bite,shot,meteors,crashing,throws,freeze,burn,slash,explo,deadly,
 force,shatter,fire,burst,toss,flurry,kill,slam,cut,damage,spike,missile,assault,blast,unleash,spear,demolish,bomb,powerful,stab,blade,projectile,sink,flood,
 scorch,injure`
-let defensiveWords = `defend,absorb,block,cancels,resistance,resists,protection,nullify,repel,reflect,shield,durablity,
-curl,endure`
-let evasiveWords = `phasing,flight,speed,dodge,hide,obscure,camouflage,predict,afterimage,evade,sense,warp`
 let buffingWords = "increase,cleansed,boost,purge,enhance,aid,support,clone,buff,charging,charge,channel,double,additional"
 let healingWords = "heal,healing,restore,recover,regenerate,rejuvenate,replenish"
 let debuffingWords = "stun,poison,paralyze,drain,sleep,lower,trap,debuff,boon"
 
 let techniqueCategories = {
     offensive:offensiveWords,
-    defensive:defensiveWords,
-    evasive:evasiveWords,
     buffing:buffingWords,
     healing:healingWords,
     debuff:debuffingWords

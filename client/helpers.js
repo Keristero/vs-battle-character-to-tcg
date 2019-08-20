@@ -30,7 +30,7 @@ function drawRectangle(ctx,x,y,w,h,fill,stroke){
     draw(ctx,fill,stroke)
 }
 
-function drawText(ctx,alignment,color,font,content = "",x,y,maxWidth = 9999,maxHeight = 9999){
+function drawText(ctx,alignment,color,font,content = "",x,y,maxWidth = 9999,maxHeight = 9999,shadowAmount=0,shadowColor="black"){
     console.log(`drawing text = ${content},${font},${x},${y},${maxWidth}`)
     let lineHeight = ctx.measureText('M').width+5;
     ctx.font = font;
@@ -38,6 +38,8 @@ function drawText(ctx,alignment,color,font,content = "",x,y,maxWidth = 9999,maxH
     ctx.fillStyle = color
     let lines = content.split('\n')
     let lastLineY = y
+    ctx.shadowColor = shadowColor
+    ctx.shadowBlur = shadowAmount
     lines.forEach((line,l_number)=>{
         let lineY = y+(lineHeight*l_number)
         let nextLineY = y+(lineHeight*(l_number+2))
@@ -51,6 +53,7 @@ function drawText(ctx,alignment,color,font,content = "",x,y,maxWidth = 9999,maxH
             ctx.fillText(text, x, lineY,maxWidth);
         }
     })
+    ctx.shadowBlur = 0
     return lastLineY;
 }
 

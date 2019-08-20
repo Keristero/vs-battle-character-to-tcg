@@ -1,3 +1,5 @@
+const parseTechnique = require('./VStechniqueParser')
+
 let validTiers = {
     "Tier":["0","1-A","1-B","1-C","2-A","2-B","2-C","3-A","3-B","3-C","4-A","4-B","4-C","5-A","5-B","5-C","6-A","6-B","6-C","7-A","7-B","7-C","8-A","8-B","8-C","9-A","9-B","9-C","10-A","10-B","10-C","11-A","11-B","11-C"],
     "Attack Potency":["Below Average","Human","Athlete","Street","Wall","Small Building","Building","Large Building","City Block","Multi-City Block","Small Town","Town","Large Town","Small City","City","Mountain","Large Mountain","Island","Large Island","Small Country","Country","Large Country","Continent","Multi-Continent","Moon","Small Planet","Planet","Large Planet","Dwarf Star","Small Star","Star","Large Star","Solar System","Multi-Solar System","Galaxy","Multi-Galaxy","Universe"].reverse(),
@@ -14,23 +16,23 @@ let statMapping = {
     },
     "Attack Potency":{
         name:"TechniquePower",
-        t:(val)=>{return Math.round(Math.pow(val/2,1.2))}// Max 20
+        t:(val)=>{return Math.round(val/4)}// Max 20
     },
     "Speed":{
         name:"Speed",
-        t:(val)=>{return Math.round(Math.pow(val/2,1.2))}// Max 10
+        t:(val)=>{return Math.round(val/4)}// Max 10
     },
     "Lifting Strength":{
         name:"AttackPower",
-        t:(val)=>{return Math.round(Math.pow(val/4,1.2))}// Max 10
+        t:(val)=>{return Math.round(val/4)}// Max 10
     },
     "Striking Strength":{
         name:"EquipmentPower",
-        t:(val)=>{return Math.round(Math.pow(val/2,1.2))}// Max 20
+        t:(val)=>{return Math.round(val/4)}// Max 20
     },
     "Durability":{
         name:"HP",
-        t:(val)=>{return Math.round(Math.pow(val,1.2))}// Max 40
+        t:(val)=>{return Math.round(val/4)}// Max 40
     }
 }
 
@@ -66,6 +68,14 @@ module.exports = function(data){
         let stat = statMapping[parsedTier]
         data.stats[stat.name] = stat.t(value)
     }
+    //Parse Techniques
+    for(let technique of data.techniques){
+        parseTechnique(technique)
+    }
+
+    //Remove all paragraphs
+    delete data.paragraphs
+
     return data
 }
 
