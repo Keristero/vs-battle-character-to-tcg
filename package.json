@@ -1,0 +1,24 @@
+{
+  "name": "vs-battle-tcg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "node-json-db": "^1.0.1",
+    "scrape-it": "^5.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Keristero/vs-battle-tcg.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Keristero/vs-battle-tcg/issues"
+  },
+  "homepage": "https://github.com/Keristero/vs-battle-tcg#readme"
+}

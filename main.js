@@ -22,7 +22,6 @@ scrape("https://vsbattles.fandom.com/wiki/Special:Random").then((res)=>{
 
 
 
-    /*
     var data = db.getData("/");
     console.log("got data")
     console.log(reanalyse_all_techniques(data))
@@ -30,31 +29,29 @@ scrape("https://vsbattles.fandom.com/wiki/Special:Random").then((res)=>{
 })
 
 
-function reanalyse_all_techniques(data){
+function reanalyse_all_techniques(data,logTags){
     let totals = {}
     //This is just to help see how well the tags work for testing
     for(let cardName in data){
+        let index = 0
         for(let technique of data[cardName].techniques){
             parseTechnique(technique)
-            console.log(technique)
             for(let propertyName in technique){
                 for(let item of technique[propertyName]){
-                    let tag = `${propertyName}_${item}`
+                    let tag = `${item}`
                     if(item.length > 1){
-                        if(!totals[tag]){
-                            totals[tag] = 0
+                        if(!totals[propertyName]){
+                            totals[propertyName] = {}
                         }
-                        totals[tag]++
+                        if(!totals[propertyName][tag]){
+                            totals[propertyName][tag] = 0
+                        }
+                        totals[propertyName][tag]++
                     }
                 }
             }
+            index++
         }
     }
-    arr_results = Object.keys(totals).map(function(key) {
-        return [key, totals[key]];
-    });
-    arr_results.sort((a,b)=>{
-        return b[1]-a[1]
-    })
-    return arr_results
+    return totals
 }
