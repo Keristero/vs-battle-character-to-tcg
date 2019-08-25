@@ -1,4 +1,4 @@
-const parseTechnique = require('./VStechniqueParser')
+const parseTechnique = require('./VStechniqueParser').parseTechnique
 
 let validTiers = {
     "Tier":["0","1-A","1-B","1-C","2-A","2-B","2-C","3-A","3-B","3-C","4-A","4-B","4-C","5-A","5-B","5-C","6-A","6-B","6-C","7-A","7-B","7-C","8-A","8-B","8-C","9-A","9-B","9-C","10-A","10-B","10-C","11-A","11-B","11-C"],
@@ -32,7 +32,7 @@ let statMapping = {
     },
     "Durability":{
         name:"HP",
-        t:(val)=>{return Math.round(val/4)}// Max 40
+        t:(val)=>{return Math.round(val/2)}// Max 40
     }
 }
 
@@ -69,9 +69,15 @@ module.exports = function(data){
         data.stats[stat.name] = stat.t(value)
     }
     //Parse Techniques
+    let final_techniques = []
     for(let technique of data.techniques){
-        parseTechnique(technique)
+        let final_tech = parseTechnique(technique)
+        final_techniques.push(final_tech)
     }
+    final_techniques.sort((a,b)=>{
+        (a.defaults - b.defaults)
+    })
+    data.techniques = final_techniques
 
     //Remove all paragraphs
     delete data.paragraphs

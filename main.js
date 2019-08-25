@@ -21,7 +21,7 @@ scrape("https://vsbattles.fandom.com/wiki/Special:Random").then((res)=>{
     fs.writeFileSync('./client/result.js',output)
 
 
-
+/*
     var data = db.getData("/");
     console.log("got data")
     console.log(reanalyse_all_techniques(data))
@@ -30,25 +30,32 @@ scrape("https://vsbattles.fandom.com/wiki/Special:Random").then((res)=>{
 
 
 function reanalyse_all_techniques(data,logTags){
-    let totals = {}
+    let totals = {
+        OffensiveTechnique:{},
+        DebuffTechnique:{},
+        BuffTechnique:{},
+        DefensiveTechnique:{},
+        elements:{}
+    }
     //This is just to help see how well the tags work for testing
     for(let cardName in data){
         let index = 0
         for(let technique of data[cardName].techniques){
-            parseTechnique(technique)
-            for(let propertyName in technique){
-                for(let item of technique[propertyName]){
-                    let tag = `${item}`
-                    if(item.length > 1){
-                        if(!totals[propertyName]){
-                            totals[propertyName] = {}
-                        }
-                        if(!totals[propertyName][tag]){
-                            totals[propertyName][tag] = 0
-                        }
-                        totals[propertyName][tag]++
+            let final_technique = parseTechnique(technique)
+            for(let propertyName in final_technique.properties){
+                let value = final_technique.properties[propertyName]
+                if(propertyName != "name"){
+                    if(!totals[final_technique.constructor.name][value]){
+                        totals[final_technique.constructor.name][value] = 0
                     }
+                    totals[final_technique.constructor.name][value]++
                 }
+            }
+            for(let element of final_technique.elements){
+                if(!totals.elements[element]){
+                    totals.elements[element] = 0
+                }
+                totals.elements[element]++
             }
             index++
         }
