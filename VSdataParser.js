@@ -38,7 +38,18 @@ let statMapping = {
 
 let roundToXManyTiers = 40
 
-module.exports = function(data){
+module.exports = function(data,requiredCategories){
+    //Ensure data is for character, or animal
+    let hasRequiredCategory = false;
+    for(let requiredCategory of requiredCategories){
+        if(data.categories.includes(requiredCategory)){
+            hasRequiredCategory = true;
+        }
+    }
+    if(!hasRequiredCategory){
+        throw("VSBattle page is not from list of required categories")
+    }
+
     //Find stats
     let parsedTiers = {}
     let tiersFound = 0

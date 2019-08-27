@@ -358,7 +358,7 @@ techniqueParsingKeywords.elements = {
 }
 techniqueParsingKeywords.animationType = {
     defaultType: "generic",
-    maxTypesSelected: 2,
+    maxTypesSelected: 1,
     minimumWords: 2,
     types: {
         generic: {
