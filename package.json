@@ -1,5 +1,5 @@
 {
-  "name": "vs-battle-tcg",
+  "name": "vs-battle-character-to-tcg",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Keristero/vs-battle-tcg.git"
+    "url": "git+https://github.com/Keristero/vs-battle-character-to-tcg.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Keristero/vs-battle-tcg/issues"
+    "url": "https://github.com/Keristero/vs-battle-character-to-tcg/issues"
   },
-  "homepage": "https://github.com/Keristero/vs-battle-tcg#readme"
+  "homepage": "https://github.com/Keristero/vs-battle-character-to-tcg#readme"
 }
