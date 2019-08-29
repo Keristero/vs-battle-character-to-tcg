@@ -73,7 +73,6 @@ class Technique{
                 }
             }
         }
-        console.log(this)
     }
 }
 

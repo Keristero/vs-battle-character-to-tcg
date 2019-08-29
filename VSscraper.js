@@ -45,6 +45,8 @@ function scrape(url){
                 }
             },
         }).then(({data,$,response, body }) => {
+            //Get URL
+            data.url = response.responseUrl
             //Get equipment, or fall back to splitting the paragraph
             data.equipment = helper_findListByHeader('Standard Equipment:',$)
             if(data.equipment.length == 0){
