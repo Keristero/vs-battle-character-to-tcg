@@ -92,6 +92,8 @@ module.exports = function(data,requiredCategories){
 
     //Remove all paragraphs
     delete data.paragraphs
+    //Remove all tiers
+    delete data.tiers
 
     return data
 }
