@@ -137,7 +137,6 @@ function scrape(url){
 }
 
 async function downloadFirstGoodImageFromImageList(images){
-    console.log(images)
     let res_image_data = null
     let promises = []
     for(let image of images){
@@ -147,7 +146,6 @@ async function downloadFirstGoodImageFromImageList(images){
     results = results.filter((item)=>{
         return item.status == 'fulfilled' ? true : false
     })
-    console.log(results.length,"images gotten successfully")
 
     if(results[0]){
         res_image_data = results[0].value
