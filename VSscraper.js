@@ -2,6 +2,8 @@ const scrapeIt = require("scrape-it")
 //const cheerio = require('cheerio')
 const fs = require('fs');
 const util = require('util')
+const imageDataURI = require('image-data-uri')
+const PromiseAllSettled = require('promise.allsettled');
  
 function scrape(url){
     return new Promise((resolve,reject)=>{
@@ -44,7 +46,7 @@ function scrape(url){
                     },
                 }
             },
-        }).then(({data,$,response, body }) => {
+        }).then(async({data,$,response, body }) => {
             //Get URL
             data.url = response.responseUrl
             //Get equipment, or fall back to splitting the paragraph
@@ -117,19 +119,41 @@ function scrape(url){
             */
             //Delete any useless images
             let validUrlRegex = /(((https?:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/
-            let filtedImages = data.images.filter((image)=>{
+            let filteredImages = data.images.filter((image)=>{
                 return (validUrlRegex.test(image.src) && helper_simplifyString(image.alt) != '')
             })
             //if no valid images are found, try again without alt text limitation
-            if(filtedImages.length == 0){
-                filtedImages = data.images.filter((image)=>{
+            if(filteredImages.length == 0){
+                filteredImages = data.images.filter((image)=>{
                     return (validUrlRegex.test(image.src))
                 })
             }
-            data.images = filtedImages
+            //Try to get an image
+            data.image = await downloadFirstGoodImageFromImageList(filteredImages)
+
             resolve(data)
         })
     })
+}
+
+async function downloadFirstGoodImageFromImageList(images){
+    console.log(images)
+    let res_image_data = null
+    let promises = []
+    for(let image of images){
+        promises.push(imageDataURI.encodeFromURL(image.src))
+    }
+    let results = await PromiseAllSettled(promises)
+    results = results.filter((item)=>{
+        return item.status == 'fulfilled' ? true : false
+    })
+    console.log(results.length,"images gotten successfully")
+
+    if(results[0]){
+        res_image_data = results[0].value
+    }
+
+    return res_image_data
 }
 
 function helper_findListByHeader(header,$){

@@ -4,6 +4,8 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "image-data-uri": "^2.0.1",
+    "promise.allsettled": "^1.0.1",
     "scrape-it": "^5.1.4"
   },
   "devDependencies": {},
